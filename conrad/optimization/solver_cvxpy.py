@@ -91,7 +91,7 @@ if module_installed('cvxpy'):
 			"""
 			Solver.__init__(self)
 			self.problem = None
-			self.__x = cvxpy.Variable(0)
+			self.__x = cvxpy.Variable(shape=(0,1))
 			self.__constraint_indices = {}
 			self.constraint_dual_vars = {}
 			self.__solvetime = np.nan
@@ -123,7 +123,7 @@ if module_installed('cvxpy'):
 			Returns:
 				None
 			"""
-			self.__x = cvxpy.Variable(n_beams)
+			self.__x = cvxpy.Variable(shape=(n_beams,1))
 			self.clear()
 
 			self.use_slack = use_slack
@@ -199,7 +199,7 @@ if module_installed('cvxpy'):
 			dose = constr.dose.value
 			if slack is None:
 				slack = 0.
-			return cvxpy.sum_entries(cvxpy.pos(
+			return cvxpy.sum(cvxpy.pos(
 					beta + sign * (A*x - (dose + sign * slack)) )) <= beta * p
 
 		@staticmethod
@@ -294,7 +294,7 @@ if module_installed('cvxpy'):
 				cslack = not exact and self.use_slack and c.priority > 0
 				if cslack:
 					gamma = self.gamma_prioritized(c.priority)
-					slack = cvxpy.Variable(1)
+					slack = cvxpy.Variable(shape=(1,1))
 					self.slack_vars[cid] = slack
 					self.problem.objective += cvxpy.Minimize(gamma * slack)
 					self.problem.constraints += [slack >= 0]
@@ -334,7 +334,7 @@ if module_installed('cvxpy'):
 
 					else:
 						# beta = 1 / slope for DVH constraint approximation
-						beta = cvxpy.Variable(1)
+						beta = cvxpy.Variable(shape=(1,1))
 						self.dvh_vars[cid] = beta
 						self.problem.constraints += [ beta >= 0 ]
 
