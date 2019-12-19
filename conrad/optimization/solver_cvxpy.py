@@ -483,7 +483,6 @@ if module_installed('cvxpy'):
 			# A, dose, weight_abs, weight_lin = \
 					# self._Solver__gather_matrix_and_coefficients(structures)
 
-			self.problem.objective = cvxpy.Minimize(0)
 			for s in structures:
 				self.problem.objective += cvxpy.Minimize(
 						ObjectiveMethods.expr(s, self.__x))
