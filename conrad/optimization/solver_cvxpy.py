@@ -91,7 +91,7 @@ if module_installed('cvxpy'):
 			"""
 			Solver.__init__(self)
 			self.problem = None
-			self.__x = cvxpy.Variable(shape=(0,1))
+			self.__x = cvxpy.Variable()
 			self.__constraint_indices = {}
 			self.constraint_dual_vars = {}
 			self.__solvetime = np.nan
