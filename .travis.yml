@@ -1,46 +1,21 @@
-os:
-  - linux
-  # - osx
+os: osx
+
 language: python
-env:
-  # - PYTHON_VERSION="2.6"
-  - PYTHON_VERSION="2.7"
-  # - PYTHON_VERSION="3.3"
-  # - PYTHON_VERSION="3.4"
-  - PYTHON_VERSION="3.5"
-  # - PYTHON_VERSION="3.5-dev"
-  # - PYTHON_VERSION="nightly"
-install: 
-  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-      wget http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -O miniconda.sh;
-    else
-      wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  - conda info -a
-  - if [[ "$PYTHON_VERSION" == "2.6" ]]; then
-      conda create -q -n test-environment python=$PYTHON_VERSION numpy scipy=0.14 nose coverage pyyaml gcc argparse;
-    else
-      conda create -q -n test-environment python=$PYTHON_VERSION numpy scipy nose coverage pyyaml gcc;
-    fi
-  - source activate test-environment
-  - conda install -c https://conda.anaconda.org/cyclus lapack
-  - pip install ecos
-  - pip install scs 
-  - pip install cvxpy
-  - pip install matplotlib
-  - python setup.py install
+
+version: '3.7'
+
+install:
+- pip install -r requirements.txt
+- pip install -e .
+
 script: 
   - export CONRAD_SKIP_POGS_CACHING_TESTS=1
   - nosetests conrad/tests/ --with-cover --cover-package=conrad
+
 branches:
   only:
     - master
-    - dev
+
 notifications:
   email:
-    - ungun@stanford.edu
+    - kmaass@uw.edu
