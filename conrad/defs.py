@@ -32,7 +32,6 @@ along with CONRAD.  If not, see <http://www.gnu.org/licenses/>.
 from conrad.compat import *
 
 import os
-import pip
 import operator as op
 import numpy as np
 import scipy.sparse as sp
@@ -112,9 +111,9 @@ def module_installed(name, version_string=None):
 	Returns:
 		:obj:`bool`: ``True`` if queried module has a matching string in
 		dictionary values returned by
-		:func:`pip.get_installed_distributions`.
+		:func:`pkg_resources.working_set`.
 	"""
-	modules = pip.get_installed_distributions()
+	modules = [module for module in pkg_resources.working_set]
 	index = -1
 
 	installed = False
