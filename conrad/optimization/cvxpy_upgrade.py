@@ -33,9 +33,12 @@ SUBST = [
     (r"Semidef\(({0}+)\)".format(TOK), r"Variable(shape=(\1,\1), PSD=True)"),
     (r"semidefinite\(({0}+)\)".format(TOK), r"Variable(shape=(\1,\1), PSD=True)"),
     # Update atom names
+    (r"mul_elemwise", "multiply"),
+    (r"max_entries", "max"),
     (r"sum_entries", "sum"),
-    (r"max_entries", "cummax"),
-    (r"max_elemwise", "max")
+    (r"max_elemwise", "maximum"),
+    (r"min_elemwise", 'minimum')
+
 ]
 
 if __name__ == "__main__":
