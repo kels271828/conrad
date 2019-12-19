@@ -13,7 +13,3 @@ script:
 branches:
   only:
     - master
-
-notifications:
-  email:
-    - kmaass@uw.edu
