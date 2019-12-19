@@ -232,16 +232,16 @@ class NontargetObjectiveLinear(TreatmentObjective):
 		Return :math:`c * \omega^T y`, for :math:`\omega\equiv```voxel_weights``
 		"""
 		if voxel_weights is None:
-			return self.weight * cvxpy.sum_entries(y_var)
+			return self.weight * cvxpy.sum(y_var)
 		else:
-			return self.weight * cvxpy.sum_entries(
+			return self.weight * cvxpy.sum(
 					cvxpy.mul_elemwise(voxel_weights, y_var))
 
 	def primal_expr_Ax(self, A, x_var, voxel_weights=None):
 		if voxel_weights is None:
-			return self.weight * cvxpy.sum_entries(x_var.T * A.T)
+			return self.weight * cvxpy.sum(x_var.T * A.T)
 		else:
-			return self.weight * cvxpy.sum_entries(
+			return self.weight * cvxpy.sum(
 					cvxpy.mul_elemwise(voxel_weights, (x_var.T * A.T).T))
 
 	def dual_expr(self, nu_var, voxel_weights=None):
@@ -351,20 +351,20 @@ class TargetObjectivePWL(TreatmentObjective):
 		if voxel_weights is not None:
 			residuals = cvxpy.mul_elemwise(voxel_weights, residuals.T)
 		return self.weight_abs * cvxpy.norm(residuals, 1) + \
-			self.weight_linear * cvxpy.sum_entries(residuals)
+			self.weight_linear * cvxpy.sum(residuals)
 
 	def primal_expr_Ax(self, A, x_var, voxel_weights=None):
 		residuals = (x_var.T * A.T).T - float(self.target_dose)
 		if voxel_weights is not None:
 			residuals = cvxpy.mul_elemwise(voxel_weights, residuals)
 		return self.weight_abs * cvxpy.norm(residuals, 1) + \
-			self.weight_linear * cvxpy.sum_entries(residuals)
+			self.weight_linear * cvxpy.sum(residuals)
 
 	def dual_expr(self, nu_var, voxel_weights=None):
 		if voxel_weights is None:
-			return -float(self.target_dose) * cvxpy.sum_entries(nu_var)
+			return -float(self.target_dose) * cvxpy.sum(nu_var)
 		else:
-			return -float(self.target_dose) * cvxpy.sum_entries(
+			return -float(self.target_dose) * cvxpy.sum(
 					cvxpy.mul_elemwise(voxel_weights, nu_var))
 
 	def dual_domain_constraints(self, nu_var, voxel_weights=None):
@@ -442,19 +442,19 @@ class ObjectiveHinge(TreatmentObjective):
 		residuals = cvxpy.pos(y_var.T - float(self.deadzone_dose))
 		if voxel_weights is not None:
 			residuals = cvxpy.mul_elemwise(voxel_weights, residuals.T)
-		return self.weight * cvxpy.sum_entries(residuals)
+		return self.weight * cvxpy.sum(residuals)
 
 	def primal_expr_Ax(self, A, x_var, voxel_weights=None):
 		residuals = cvxpy.pos((x_var.T * A.T).T - float(self.deadzone_dose))
 		if voxel_weights is not None:
 			residuals = cvxpy.mul_elemwise(voxel_weights, residuals)
-		return self.weight * cvxpy.sum_entries(residuals)
+		return self.weight * cvxpy.sum(residuals)
 
 	def dual_expr(self, nu_var, voxel_weights=None):
 		if voxel_weights is None:
-			return -float(self.deadzone_dose) * cvxpy.sum_entries(nu_var)
+			return -float(self.deadzone_dose) * cvxpy.sum(nu_var)
 		else:
-			return -float(self.deadzone_dose) * cvxpy.sum_entries(
+			return -float(self.deadzone_dose) * cvxpy.sum(
 					cvxpy.mul_elemwise(voxel_weights, nu_var))
 
 	def dual_domain_constraints(self, nu_var, voxel_weights=None):
