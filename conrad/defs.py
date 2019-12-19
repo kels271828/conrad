@@ -32,6 +32,7 @@ along with CONRAD.  If not, see <http://www.gnu.org/licenses/>.
 from conrad.compat import *
 
 import os
+import pkg_resources
 import operator as op
 import numpy as np
 import scipy.sparse as sp
