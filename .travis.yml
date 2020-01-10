@@ -41,6 +41,4 @@ branches:
   only:
     - master
     - dev
-notifications:
-  email:
-    - ungun@stanford.edu
+    - cvxpy_1.0
