@@ -109,8 +109,8 @@ class ObjectivesTestCase(ConradTestCase):
 
 	def __exercise_cvxpy_expressions(self, objective):
 		# primal expression
-		y = cvxpy.Variable(3)
-		x = cvxpy.Variable(5)
+		y = cvxpy.Variable(shape=(3,1))
+		x = cvxpy.Variable(shape=(5,1))
 		A = np.random.rand(3, 5)
 		x.save_value(np.random.rand(5))
 		y.save_value(np.dot(A, x.value))
@@ -131,7 +131,7 @@ class ObjectivesTestCase(ConradTestCase):
 		self.assert_scalar_equal( fAx.value, f )
 
 		# dual expression
-		nu = cvxpy.Variable(3)
+		nu = cvxpy.Variable(shape=(3,1))
 		nu.save_value(np.random.rand(3))
 
 		# unweighted, f^*(nu)
@@ -170,7 +170,7 @@ class ObjectivesTestCase(ConradTestCase):
 		self.__exercise_cvxpy_expressions(obj)
 
 		# dual domain constraints
-		constr = obj.dual_domain_constraints(cvxpy.Variable(3))
+		constr = obj.dual_domain_constraints(cvxpy.Variable(shape=(3,1)))
 		self.assertIsInstance(
 				constr, cvxpy.constraints.eq_constraint.EqConstraint )
 
@@ -227,7 +227,7 @@ class ObjectivesTestCase(ConradTestCase):
 		# dual_domain_constraints
 		weights = np.random.rand(3)
 		for wt in [None, weights]:
-			constr = obj.dual_domain_constraints(cvxpy.Variable(3), wt)
+			constr = obj.dual_domain_constraints(cvxpy.Variable(shape=(3,1)), wt)
 			self.assertIsInstance( constr, list )
 			self.assertEqual( len(constr), 2 )
 			for c in constr:
@@ -286,7 +286,7 @@ class ObjectivesTestCase(ConradTestCase):
 		# dual_domain_constraints
 		weights = np.random.rand(3)
 		for wt in [None, weights]:
-			constr = obj.dual_domain_constraints(cvxpy.Variable(3), wt)
+			constr = obj.dual_domain_constraints(cvxpy.Variable(shape=(3,1)), wt)
 			self.assertIsInstance( constr, list )
 			self.assertEqual( len(constr), 2 )
 			for c in constr:

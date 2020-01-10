@@ -139,8 +139,8 @@ class ObjectiveMethodsTestCase(ConradTestCase):
 		self.assertEqual( ff_collapse, ff_full )
 
 	def test_primal_expr(self):
-		y_var = cvxpy.Variable(self.m)
-		x_var = cvxpy.Variable(self.n)
+		y_var = cvxpy.Variable(shape=(self.m,1))
+		x_var = cvxpy.Variable(shape=(self.n,1))
 		y_var.save_value(self.y)
 		x_var.save_value(self.x)
 
@@ -161,7 +161,7 @@ class ObjectiveMethodsTestCase(ConradTestCase):
 
 		# nontarget
 		# unweighted, weighted: collapsed vs. full
-		y_mean_var = cvxpy.Variable(1)
+		y_mean_var = cvxpy.Variable(shape=(1,1))
 		self.oar.A_full = self.A
 
 		for wt in [None, self.voxel_weights]:
@@ -181,7 +181,7 @@ class ObjectiveMethodsTestCase(ConradTestCase):
 			# TODO: WHY IS THIS LINE A PROBLEM???????
 
 	def test_dual_expr(self):
-		nu_var = cvxpy.Variable(self.m)
+		nu_var = cvxpy.Variable(shape=(self.m,1))
 		nu_var.save_value(np.random.rand(self.m))
 
 		# target
@@ -197,7 +197,7 @@ class ObjectiveMethodsTestCase(ConradTestCase):
 			self.assert_scalar_equal( ff_y.value, expect.value )
 
 		# nontarget
-		nu_mean_var = cvxpy.Variable(1)
+		nu_mean_var = cvxpy.Variable(shape=(1,1))
 		nu_mean_var.save_value(np.mean(nu_var.value))
 
 		# unweighted, weighted: collapsed vs. full
@@ -289,7 +289,7 @@ class ObjectiveMethodsTestCase(ConradTestCase):
 						ff_full.eval(self.oar.y) )
 
 	def test_dual_domain_constraints(self):
-		nu_var = cvxpy.Variable(self.m)
+		nu_var = cvxpy.Variable(shape=(self.m,1))
 		nu_var.save_value(np.random.rand(self.m))
 
 		# target
