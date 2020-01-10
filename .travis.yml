@@ -13,3 +13,4 @@ script:
 branches:
   only:
     - master
+    - cvxpy_1.0
