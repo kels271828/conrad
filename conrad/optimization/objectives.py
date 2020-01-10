@@ -234,6 +234,7 @@ class NontargetObjectiveLinear(TreatmentObjective):
 		if voxel_weights is None:
 			return self.weight * cvxpy.sum(y_var)
 		else:
+			voxel_weights = np.reshape(voxel_weights, y_var.shape) # kelsey added
 			return self.weight * cvxpy.sum(
 					cvxpy.multiply(voxel_weights, y_var))
 
@@ -241,6 +242,7 @@ class NontargetObjectiveLinear(TreatmentObjective):
 		if voxel_weights is None:
 			return self.weight * cvxpy.sum(x_var.T * A.T)
 		else:
+			voxel_weights = np.reshape(voxel_weights, ((x_var.T * A.T).T).shape) # kelsey added
 			return self.weight * cvxpy.sum(
 					cvxpy.multiply(voxel_weights, (x_var.T * A.T).T))
 
@@ -349,6 +351,7 @@ class TargetObjectivePWL(TreatmentObjective):
 	def primal_expr(self, y_var, voxel_weights=None):
 		residuals = y_var.T - float(self.target_dose)
 		if voxel_weights is not None:
+			voxel_weights = np.reshape(voxel_weights, residuals.T.shape) # kelsey added
 			residuals = cvxpy.multiply(voxel_weights, residuals.T)
 		return self.weight_abs * cvxpy.norm(residuals, 1) + \
 			self.weight_linear * cvxpy.sum(residuals)
@@ -356,6 +359,7 @@ class TargetObjectivePWL(TreatmentObjective):
 	def primal_expr_Ax(self, A, x_var, voxel_weights=None):
 		residuals = (x_var.T * A.T).T - float(self.target_dose)
 		if voxel_weights is not None:
+			voxel_weights = np.reshape(voxel_weights, residuals.shape) # kelsey added
 			residuals = cvxpy.multiply(voxel_weights, residuals)
 		return self.weight_abs * cvxpy.norm(residuals, 1) + \
 			self.weight_linear * cvxpy.sum(residuals)
@@ -364,6 +368,7 @@ class TargetObjectivePWL(TreatmentObjective):
 		if voxel_weights is None:
 			return -float(self.target_dose) * cvxpy.sum(nu_var)
 		else:
+			voxel_weights = np.reshape(voxel_weights, nu_var.shape) # kelsey added
 			return -float(self.target_dose) * cvxpy.sum(
 					cvxpy.multiply(voxel_weights, nu_var))
 
@@ -377,6 +382,7 @@ class TargetObjectivePWL(TreatmentObjective):
 			voxel_weights = 1
 		else:
 			voxel_weights = vec(voxel_weights)
+			voxel_weights = np.reshape(voxel_weights, nu_var.shape) # kelsey added
 		return [
 				nu_var <= voxel_weights * upper_bound,
 				nu_var >= voxel_weights * lower_bound
@@ -441,12 +447,14 @@ class ObjectiveHinge(TreatmentObjective):
 	def primal_expr(self, y_var, voxel_weights=None):
 		residuals = cvxpy.pos(y_var.T - float(self.deadzone_dose))
 		if voxel_weights is not None:
+			voxel_weights = np.reshape(voxel_weights, residuals.T.shape) # kelsey added
 			residuals = cvxpy.multiply(voxel_weights, residuals.T)
 		return self.weight * cvxpy.sum(residuals)
 
 	def primal_expr_Ax(self, A, x_var, voxel_weights=None):
 		residuals = cvxpy.pos((x_var.T * A.T).T - float(self.deadzone_dose))
 		if voxel_weights is not None:
+			voxel_weights = np.reshape(voxel_weights, residuals.shape) # kelsey added
 			residuals = cvxpy.multiply(voxel_weights, residuals)
 		return self.weight * cvxpy.sum(residuals)
 
@@ -454,6 +462,7 @@ class ObjectiveHinge(TreatmentObjective):
 		if voxel_weights is None:
 			return -float(self.deadzone_dose) * cvxpy.sum(nu_var)
 		else:
+			voxel_weights = np.reshape(voxel_weights, nu_var.shape) # kelsey added
 			return -float(self.deadzone_dose) * cvxpy.sum(
 					cvxpy.multiply(voxel_weights, nu_var))
 
