@@ -85,8 +85,8 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		if s is None:
 			return
 
-		beta = cvxpy.Variable(1)
-		x = cvxpy.Variable(n_beams)
+		beta = cvxpy.Variable(shape=(1,1))
+		x = cvxpy.Variable(shape=(n_beams,1))
 		A = self.A_targ
 
 		# lower dose limit:
@@ -116,7 +116,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		theta = (1 - constr.percentile.fraction) * self.m_target
 		c = s._SolverCVXPY__percentile_constraint_restricted(
 				A, x, constr, beta)
-		c_direct = cvxpy.sum_entries(
+		c_direct = cvxpy.sum(
 				cvxpy.pos(beta + (-1) * (A*x - dose))) <= beta * theta
 
 		obj_shape, mat_shape = self.assert_problems_equivalent(
@@ -158,7 +158,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		theta = constr.percentile.fraction * self.m_target
 		c = s._SolverCVXPY__percentile_constraint_restricted(
 				A, x, constr, beta)
-		c_direct = cvxpy.sum_entries(
+		c_direct = cvxpy.sum(
 				cvxpy.pos(beta + (A*x - dose))) <= beta * theta
 
 		obj_shape, mat_shape = self.assert_problems_equivalent(
@@ -177,7 +177,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		#
 		#	\sum {beta - y + (dose - slack)}_+ <= beta * (1 - fraction) * size
 		#
-		slack = cvxpy.Variable(1)
+		slack = cvxpy.Variable(shape=(1,1))
 
 		constr = D(80) >= 10 * Gy
 		dose = constr.dose.value
@@ -187,7 +187,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		theta = (1 - constr.percentile.fraction) * self.m_target
 		c = s._SolverCVXPY__percentile_constraint_restricted(
 				A, x, constr, beta, slack=slack)
-		c_direct = cvxpy.sum_entries(cvxpy.pos(
+		c_direct = cvxpy.sum(cvxpy.pos(
 				beta + (-1) * (A * x - (dose - slack)))) <= beta * theta
 
 		obj_shape, mat_shape = self.assert_problems_equivalent(
@@ -214,7 +214,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		theta = constr.percentile.fraction * self.m_target
 		c = s._SolverCVXPY__percentile_constraint_restricted(
 				A, x, constr, beta, slack=slack)
-		c_direct = cvxpy.sum_entries(
+		c_direct = cvxpy.sum(
 				cvxpy.pos(beta + (A * x - (dose + slack)))) <= beta * theta
 
 		obj_shape, mat_shape = self.assert_problems_equivalent(
@@ -235,8 +235,8 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		if s is None:
 			return
 
-		beta = cvxpy.Variable(1)
-		x = cvxpy.Variable(n_beams)
+		beta = cvxpy.Variable(shape=(1,1))
+		x = cvxpy.Variable(shape=(n_beams,1))
 		A = self.A_targ
 		constr_size = (self.m_target, 1)
 
@@ -291,7 +291,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		if s is None:
 			return
 
-		x = cvxpy.Variable(self.n)
+		x = cvxpy.Variable(shape=(self.n,1))
 		p = cvxpy.Problem(cvxpy.Minimize(0), [x >= 0])
 
 		s.init_problem(self.n, use_slack=False, use_2pass=False)
@@ -313,7 +313,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 
 		# add mean constraint with slack (upper)
 		for priority in xrange(1, 4):
-			slack = cvxpy.Variable(1)
+			slack = cvxpy.Variable(shape=(1,1))
 			s.use_slack = True
 			constr = D('mean') <= 10 * Gy
 			constr.priority = priority
@@ -332,7 +332,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 			s.use_slack = False
 
 			# add mean constraint with slack (lower)
-			slack = cvxpy.Variable(1)
+			slack = cvxpy.Variable(shape=(1,1))
 			s.use_slack = True
 			constr = D('mean') >= 10 * Gy
 			constr.priority = priority
@@ -395,7 +395,7 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		constr_cvxpy = self.anatomy['tumor'].A_mean * x <= constr.dose.value
 
 		constr2 = D('mean') <= 8 * Gy
-		slack = cvxpy.Variable(1)
+		slack = cvxpy.Variable(shape=(1,1))
 		self.anatomy['tumor'].constraints += constr2
 		# (yes slack)
 		constr_cvxpy2 = self.anatomy['tumor'].A_mean * x - slack <= constr2.dose.value
@@ -460,14 +460,14 @@ class SolverCVXPYTestCase(SolverGenericTestCase):
 		A_mean = self.anatomy['oar'].A_mean
 		weight_oar = self.anatomy['oar'].objective.weight_raw
 
-		x = cvxpy.Variable(self.n)
+		x = cvxpy.Variable(shape=(self.n,1))
 		p = cvxpy.Problem(cvxpy.Minimize(0), [])
 		p.constraints += [ x >= 0 ]
 		p.objective += cvxpy.Minimize(
 				weight_abs * cvxpy.norm(A * x - dose, 1) +
-				weight_lin * cvxpy.sum_entries(A * x - dose) )
+				weight_lin * cvxpy.sum(A * x - dose) )
 		p.objective += cvxpy.Minimize(
-				weight_oar * cvxpy.sum_entries(A_mean.T * x))
+				weight_oar * cvxpy.sum(A_mean.T * x))
 
 		s.use_slack = False
 		s.build(structure_list, exact=False)
