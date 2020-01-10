@@ -28,7 +28,7 @@ install:
       conda create -q -n test-environment python=$PYTHON_VERSION numpy scipy nose coverage pyyaml gcc;
     fi
   - source activate test-environment
-  - conda install -c https://conda.anaconda.org/cyclus lapack
+  - conda install -c conda-forge lapack
   - pip install ecos
   - pip install scs 
   - pip install cvxpy
