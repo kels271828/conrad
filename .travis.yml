@@ -40,7 +40,4 @@ script:
 branches:
   only:
     - master
-    - dev
-notifications:
-  email:
-    - ungun@stanford.edu
+    - cvx_old
