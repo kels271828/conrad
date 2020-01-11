@@ -1,13 +1,13 @@
 os:
-  # - linux
-  - osx
+  - linux
+  # - osx
 language: python
 env:
   # - PYTHON_VERSION="2.6"
   # - PYTHON_VERSION="2.7"
   # - PYTHON_VERSION="3.3"
   # - PYTHON_VERSION="3.4"
-  - PYTHON_VERSION="3.5.3-1"
+  - PYTHON_VERSION="3.5"
   # - PYTHON_VERSION="3.5-dev"
   # - PYTHON_VERSION="nightly"
 install: 
