@@ -40,4 +40,4 @@ script:
 branches:
   only:
     - master
-    - cvx_old
+    - old_cvx
