@@ -29,10 +29,10 @@ install:
     fi
   - source activate test-environment
   - conda install -c conda-forge lapack
-  - pip install ecos=2.0.4
-  - pip install scs=1.2.6
-  - pip install cvxpy=0.4.10
-  - pip install matplotlib=2.0.2
+  - pip install ecos==2.0.4
+  - pip install scs==1.2.6
+  - pip install cvxpy==0.4.10
+  - pip install matplotlib==2.0.2
   - python setup.py install
 script: 
   - export CONRAD_SKIP_POGS_CACHING_TESTS=1
