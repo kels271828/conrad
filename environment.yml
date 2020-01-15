@@ -12,6 +12,7 @@ dependencies:
   - isl==0.12.2
   - lapack==3.6.1
   - libgfortran==3.0.0
+  - libgcc
   - mkl==2017.0.3
   - mpc==1.0.3
   - mpfr==3.1.5
