@@ -1,42 +1,24 @@
-os:
-  - linux
-  # - osx
 language: python
-env:
-  # - PYTHON_VERSION="2.6"
-  # - PYTHON_VERSION="2.7"
-  # - PYTHON_VERSION="3.3"
-  # - PYTHON_VERSION="3.4"
-  - PYTHON_VERSION="3.5"
-  # - PYTHON_VERSION="3.5-dev"
-  # - PYTHON_VERSION="nightly"
+
+python: '3.5.1'
+
 install: 
-  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-      wget http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -O miniconda.sh;
-    else
-      wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
+  - sudo apt-get update
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - if [[ "$PYTHON_VERSION" == "2.6" ]]; then
-      conda create -q -n test-environment python=$PYTHON_VERSION numpy scipy=0.14 nose coverage pyyaml gcc argparse;
-    else
-      conda create -q -n test-environment python=$PYTHON_VERSION numpy=1.13.1 scipy=0.19.1 nose=1.3.7 coverage=4.4.1 pyyaml=3.12 gcc=4.8.5;
-    fi
-  - source activate test-environment
-  - conda install -c conda-forge lapack
-  - pip install ecos==2.0.4
-  - pip install scs==1.2.6
-  - pip install cvxpy==0.4.10
-  - pip install matplotlib==2.0.2
-  - python setup.py install
+  - conda env create -f environment.yml
+  - source activate test_env
+  - pip install -e .
+
 script: 
   - export CONRAD_SKIP_POGS_CACHING_TESTS=1
   - nosetests conrad/tests/ --with-cover --cover-package=conrad
+
 branches:
   only:
     - master
